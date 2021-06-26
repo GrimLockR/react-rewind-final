@@ -4,15 +4,18 @@ import Tabela from './Tabela';
 import Formulario from './Formulario';
 import FormularioEdit from './FormularioEdit';
 
-
+//função para interagir com a api e ler os dados dos estudios
 async function getEstudios(){
+  // fazer o acesso a um 'endpoint', que contem os dados dos estudios
   let resposta = await fetch("api/EstudiosAPI");
   if(!resposta.ok){
     console.error("Não foi possivel ler os dados da API" + resposta.status);
   }
+  //devolve os dados que seram usados
   return await resposta.json();
 }
 
+//chama a API e envia os dadso do novo estudio
 async function adicionaEstudio(novoEstudio) {
   // https://developer.mozilla.org/pt-BR/docs/Web/API/FormData
   // https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects
@@ -32,6 +35,7 @@ async function adicionaEstudio(novoEstudio) {
   return await resposta.json();
 }
 
+//chama a API e envia os dadso editados do  estudio
 async function editEstudio(estudioEditado){
   
   let resposta = await fetch("api/EstudiosAPI/"+estudioEditado.Id);
@@ -56,7 +60,7 @@ async function editEstudio(estudioEditado){
 function refresh(){
   window.location.reload(false);
 }
-
+//chama a API e apga os dados do estudio selecionado
 async function apagaOEstudio(index){
   let resposta = await fetch("api/EstudiosAPI/"+index);
   let estudio =  await resposta.json();
@@ -97,18 +101,19 @@ constructor(props){
 
 
 componentDidMount(){
-  
+  // ler os dados dos Estudios, e adicioná-los à state 'estudios'
   this.loadEstudios();
 }
-
+//chama o carregamento dos estudios
 async loadEstudios(){
 
   //1. Buscar os dados da API (fetch)
   //2. Atualizar os dados da state
   try{
+    //1
     this.setState({loadstate:"Carregando dados"})
     let estudiosVindosDaAPI = await getEstudios();
-
+//2
     this.setState({estudios:estudiosVindosDaAPI,loadstate:"Sucesso"});
   }catch(erro){
     this.setState({loadstate:"erro",errorMessage:erro.toString()})
@@ -137,7 +142,8 @@ handlerGuardaEstudio = async (dadosDaSerieACarregar) => {
   }
 
 }
-
+//  enviá-los os dados editados para a API
+  //  efetuar o Reload da tabela
 handlerEditarEstudio = async (dadosDoEstudioACarregar)=>{
   try{
     
@@ -148,6 +154,8 @@ handlerEditarEstudio = async (dadosDoEstudioACarregar)=>{
   }
 }
 
+//  apaga os dados da API
+  //  efetuar o Reload da tabela
 apagaEstudio=async(index)=>{
   try{
     await apagaOEstudio(index);
@@ -158,7 +166,8 @@ apagaEstudio=async(index)=>{
   console.error("não consegui apagar os dados do estudio",erro);
   }
 }
-
+// Buscar os dados da API (fetch)
+  // Atualizar os dados da state
 editaEstudio= async(index)=>{
   try{
     let resposta = await fetch("api/EstudiosAPI/"+index);
@@ -174,7 +183,7 @@ editaEstudio= async(index)=>{
 
 
 render(){
-  
+  //ler os dados que estão no array
   const {estudios} = this.state;
 
   switch(this.state.loadstate){
@@ -191,17 +200,22 @@ render(){
       <td>
       <h4>Adicione um estudio| </h4>
       <hr></hr>
+      {/* componente que serve para apresentar no ecrã um formulário 
+                para realizar-se a adição de um estudio novo */}
       <Formulario dadosRecolhidos={this.handlerGuardaEstudio}/>
       </td>
       
       <td>
       <h4> Edite um estudio</h4>
       <hr></hr>
+        {/* componente que serve para apresentar no ecrã um formulário 
+                para realizar-se a ediçao de um estudio  */}
       <FormularioEdit dadosAEditar={this.state.estudioEdit} dadosEditRecolhidos={this.handlerEditarEstudio}/>
       </td>
       </tr>
       <h4>Lista de estudios</h4>
       <hr></hr>
+      {/*Tabela tem um parametro de entrada que esta a receber o array JSOn com o dados dos estudios lidos pela API */} 
       <Tabela dadosEstudios={estudios} idEditar={this.editaEstudio} id={this.apagaEstudio}/><br></br>
       
       
