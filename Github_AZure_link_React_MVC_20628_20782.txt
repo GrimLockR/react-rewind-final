@@ -1,0 +1,4 @@
+Componente React -> https://github.com/GrimLockR/react-rewind-final.git
+Componente MVC -> https://github.com/ToCBarros/Rewind-Autenticacao.git
+Componente React Azure -> https://rewind2062820782.azurewebsites.net
+Componente MVC Azure -> https://rewind20210626190544.azurewebsites.net/
